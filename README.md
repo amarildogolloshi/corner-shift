@@ -4,6 +4,11 @@
 
 The goal is simple: move each tile to its matching corner gate and slide it out of the board. Red tiles exit through the red gate, and white tiles exit through the white gate.
 
+## Play
+
+Play the game here:
+https://amarildogolloshi.github.io/corner-shift/
+
 ## Game Preview
 
 Corner Shift uses a 5x5 board filled with red and white tiles. Each game randomly chooses one exit side for each corner:
