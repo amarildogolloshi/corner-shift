@@ -4,15 +4,41 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Corner Shift</title>
-    <link rel="stylesheet" href="styles.css?v=gate-line-exit-2">
+    <link rel="stylesheet" href="styles.css?v=tetris-mix-1">
 </head>
-<body>
+<body class="theme-classic">
     <main class="game-wrap">
         <h1>Corner Shift</h1>
 
         <p class="info">
-            Slide red tiles to the red gate and white tiles to the white gate. If the path is clear, a correct tile can slide through its corner and exit in one move.
+            Choose a theme and the pattern list will update to match it. Classic theme includes checker, stripes, border, columns, and random patterns. Shapes theme includes Heart, Diamond, Circle, Square, Triangle, Hexagon, and Plus patterns. Tetris theme now uses one mixed board pattern made from several red and white tetromino-style shapes. Alphabet and Number themes use plain red and white tiles with A-Z and 0-9 board patterns.
         </p>
+
+        <section class="controls">
+            <div class="control-group">
+                <label for="themeSelect">Theme:</label>
+                <select id="themeSelect">
+                    <option value="classic" selected>Classic</option>
+                    <option value="shapes">Shapes</option>
+                    <option value="flower">Flower</option>
+                    <option value="animal">Animal</option>
+                    <option value="ocean">Ocean</option>
+                    <option value="space">Space</option>
+                    <option value="tetris">Tetris</option>
+                    <option value="dinosaur">Dinosaur</option>
+                    <option value="vehicle">Vehicle</option>
+                    <option value="sports">Sports</option>
+                    <option value="holiday">Holiday</option>
+                    <option value="alphabet">Alphabet</option>
+                    <option value="number">Number</option>
+                </select>
+            </div>
+
+            <div class="control-group">
+                <label for="patternSelect">Pattern:</label>
+                <select id="patternSelect"></select>
+            </div>
+        </section>
 
         <section class="stats">
             <div class="pill">Moves: <span id="moves">0</span></div>
@@ -28,10 +54,10 @@
         <button id="newGameBtn">New Game</button>
 
         <p class="rules">
-            Drag, swipe, or tap a tile. Tiles can slide through empty spaces. A correct tile can exit through its gate if it is already on the gate line and every space between it and the corner is empty.
+            Drag, swipe, or tap a tile. Tiles can slide through empty spaces. A matching tile can exit through its gate if it is on the correct gate line and the path to the corner is clear.
         </p>
     </main>
 
-    <script src="script.js?v=gate-line-exit-2"></script>
+    <script src="script.js?v=tetris-mix-1"></script>
 </body>
 </html>
