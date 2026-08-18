@@ -9,6 +9,923 @@ const newGameBtn = document.getElementById("newGameBtn");
 const messageElement = document.getElementById("message");
 const movesElement = document.getElementById("moves");
 const leftElement = document.getElementById("left");
+const patternSelect = document.getElementById("patternSelect");
+const themeSelect = document.getElementById("themeSelect");
+
+const THEMES = {
+    classic: { redLabel: "", whiteLabel: "" },
+    shapes: { redLabel: "", whiteLabel: "" },
+    flower: { redLabel: "", whiteLabel: "" },
+    animal: { redLabel: "", whiteLabel: "" },
+    ocean: { redLabel: "", whiteLabel: "" },
+    space: { redLabel: "", whiteLabel: "" },
+    tetris: { redLabel: "", whiteLabel: "" },
+    dinosaur: { redLabel: "", whiteLabel: "" },
+    vehicle: { redLabel: "", whiteLabel: "" },
+    sports: { redLabel: "", whiteLabel: "" },
+    holiday: { redLabel: "", whiteLabel: "" },
+    alphabet: { redLabel: "", whiteLabel: "" },
+    number: { redLabel: "", whiteLabel: "" }
+};
+
+const PATTERN_TILE_LABELS = {
+    heart: { redLabel: "♥", whiteLabel: "" },
+    diamond: { redLabel: "◆", whiteLabel: "" },
+    circle: { redLabel: "●", whiteLabel: "" },
+    square: { redLabel: "■", whiteLabel: "" },
+    triangle: { redLabel: "▲", whiteLabel: "" },
+    hexagon: { redLabel: "⬢", whiteLabel: "" },
+    plus: { redLabel: "+", whiteLabel: "" },
+    flower: { redLabel: "🌸", whiteLabel: "" },
+    garden: { redLabel: "🌿", whiteLabel: "" },
+    petals: { redLabel: "🌼", whiteLabel: "" },
+    cat: { redLabel: "🐱", whiteLabel: "" },
+    paw: { redLabel: "🐾", whiteLabel: "" },
+    butterfly: { redLabel: "🦋", whiteLabel: "" },
+    bunny: { redLabel: "🐰", whiteLabel: "" },
+    owl: { redLabel: "🦉", whiteLabel: "" },
+    bear: { redLabel: "🐻", whiteLabel: "" },
+    fox: { redLabel: "🦊", whiteLabel: "" },
+    bee: { redLabel: "🐝", whiteLabel: "" },
+    fish: { redLabel: "🐠", whiteLabel: "" },
+    wave: { redLabel: "🌊", whiteLabel: "" },
+    turtle: { redLabel: "🐢", whiteLabel: "" },
+    star: { redLabel: "⭐", whiteLabel: "" },
+    orbit: { redLabel: "🪐", whiteLabel: "" },
+    rocket: { redLabel: "🚀", whiteLabel: "" },
+    christmasTree: { redLabel: "🎄", whiteLabel: "" },
+    snowflake: { redLabel: "❄️", whiteLabel: "" },
+    pumpkin: { redLabel: "🎃", whiteLabel: "" },
+    easterEgg: { redLabel: "🥚", whiteLabel: "" },
+    trex: { redLabel: "🦖", whiteLabel: "" },
+    triceratops: { redLabel: "🦕", whiteLabel: "" },
+    dinoFootprint: { redLabel: "🐾", whiteLabel: "" },
+    dinoEgg: { redLabel: "🥚", whiteLabel: "" },
+    car: { redLabel: "🚗", whiteLabel: "" },
+    truck: { redLabel: "🚚", whiteLabel: "" },
+    airplane: { redLabel: "✈️", whiteLabel: "" },
+    vehicleRocket: { redLabel: "🚀", whiteLabel: "" },
+    soccer: { redLabel: "⚽", whiteLabel: "" },
+    basketball: { redLabel: "🏀", whiteLabel: "" },
+    baseball: { redLabel: "⚾", whiteLabel: "" },
+    football: { redLabel: "🏈", whiteLabel: "" }
+};
+
+
+const THEME_PATTERNS = {
+    classic: ["checker", "stripes", "border", "columns", "random"],
+    shapes: ["heart", "diamond", "circle", "square", "triangle", "hexagon", "plus"],
+    flower: ["flower", "garden", "petals"],
+    animal: ["cat", "paw", "butterfly", "bunny", "owl", "bear", "fox", "bee"],
+    ocean: ["fish", "wave", "turtle"],
+    space: ["star", "orbit", "rocket"],
+    tetris: ["tetrisMix"],
+    dinosaur: ["trex", "triceratops", "dinoFootprint", "dinoEgg"],
+    vehicle: ["car", "truck", "airplane", "vehicleRocket"],
+    sports: ["soccer", "basketball", "baseball", "football"],
+    holiday: ["christmasTree", "snowflake", "pumpkin", "easterEgg"],
+    alphabet: ['letterA', 'letterB', 'letterC', 'letterD', 'letterE', 'letterF', 'letterG', 'letterH', 'letterI', 'letterJ', 'letterK', 'letterL', 'letterM', 'letterN', 'letterO', 'letterP', 'letterQ', 'letterR', 'letterS', 'letterT', 'letterU', 'letterV', 'letterW', 'letterX', 'letterY', 'letterZ'],
+    number: ['number0', 'number1', 'number2', 'number3', 'number4', 'number5', 'number6', 'number7', 'number8', 'number9']
+};
+
+const PATTERN_LABELS = {
+    checker: "Checker",
+    stripes: "Stripes",
+    border: "Border",
+    columns: "Columns",
+    heart: "Heart",
+    diamond: "Diamond",
+    circle: "Circle",
+    square: "Square",
+    triangle: "Triangle",
+    hexagon: "Hexagon",
+    plus: "Plus",
+    rings: "Rings",
+    flower: "Flower",
+    garden: "Garden",
+    petals: "Petals",
+    cat: "Cat Face",
+    paw: "Paw Print",
+    butterfly: "Butterfly",
+    bunny: "Bunny Face",
+    owl: "Owl Face",
+    bear: "Bear Face",
+    fox: "Fox Face",
+    bee: "Bee",
+    fish: "Fish",
+    wave: "Wave",
+    turtle: "Turtle",
+    star: "Star",
+    orbit: "Orbit",
+    rocket: "Rocket",
+    tetrisMix: "Tetris Mix",
+    tetrisIRed: "Tetris I Red",
+    tetrisIWhite: "Tetris I White",
+    tetrisTRed: "Tetris T Red",
+    tetrisTWhite: "Tetris T White",
+    tetrisLRed: "Tetris L Red",
+    tetrisLWhite: "Tetris L White",
+    tetrisSRed: "Tetris S Red",
+    tetrisSWhite: "Tetris S White",
+    tetrisORed: "Tetris O Red",
+    tetrisOWhite: "Tetris O White",
+    tetrisI: "Tetris I Piece",
+    tetrisT: "Tetris T Piece",
+    tetrisL: "Tetris L Piece",
+    tetrisS: "Tetris S Piece",
+    tetrisO: "Tetris O Piece",
+    trex: "T-Rex",
+    triceratops: "Triceratops",
+    dinoFootprint: "Footprint",
+    dinoEgg: "Egg",
+    car: "Car",
+    truck: "Truck",
+    airplane: "Airplane",
+    vehicleRocket: "Rocket",
+    soccer: "Soccer Ball",
+    basketball: "Basketball",
+    baseball: "Baseball",
+    football: "Football",
+    christmasTree: "Christmas Tree",
+    snowflake: "Snowflake",
+    pumpkin: "Pumpkin",
+    easterEgg: "Easter Egg",
+    letterA: "A",
+    letterB: "B",
+    letterC: "C",
+    letterD: "D",
+    letterE: "E",
+    letterF: "F",
+    letterG: "G",
+    letterH: "H",
+    letterI: "I",
+    letterJ: "J",
+    letterK: "K",
+    letterL: "L",
+    letterM: "M",
+    letterN: "N",
+    letterO: "O",
+    letterP: "P",
+    letterQ: "Q",
+    letterR: "R",
+    letterS: "S",
+    letterT: "T",
+    letterU: "U",
+    letterV: "V",
+    letterW: "W",
+    letterX: "X",
+    letterY: "Y",
+    letterZ: "Z",
+    number0: "0",
+    number1: "1",
+    number2: "2",
+    number3: "3",
+    number4: "4",
+    number5: "5",
+    number6: "6",
+    number7: "7",
+    number8: "8",
+    number9: "9",
+    random: "Random"
+};
+
+const BOARD_PATTERNS = {
+    checker: [
+        ["red", "white", "red", "white", "red"],
+        ["white", "red", "white", "red", "white"],
+        ["red", "white", "red", "white", "red"],
+        ["white", "red", "white", "red", "white"],
+        ["red", "white", "red", "white", "red"]
+    ],
+    stripes: [
+        ["red", "red", "red", "red", "red"],
+        ["white", "white", "white", "white", "white"],
+        ["red", "red", "red", "red", "red"],
+        ["white", "white", "white", "white", "white"],
+        ["red", "red", "red", "red", "white"]
+    ],
+    border: [
+        ["red", "red", "red", "red", "red"],
+        ["red", "white", "white", "white", "red"],
+        ["red", "white", "red", "white", "red"],
+        ["red", "white", "white", "white", "red"],
+        ["red", "red", "red", "red", "white"]
+    ],
+    columns: [
+        ["red", "white", "red", "white", "red"],
+        ["red", "white", "red", "white", "red"],
+        ["red", "white", "red", "white", "red"],
+        ["red", "white", "red", "white", "red"],
+        ["red", "white", "red", "white", "white"]
+    ],
+    heart: [
+        ["red", "white", "red", "white", "red"],
+        ["red", "red", "red", "red", "red"],
+        ["red", "red", "red", "red", "red"],
+        ["white", "red", "red", "red", "white"],
+        ["white", "white", "red", "white", "white"]
+    ],
+    diamond: [
+        ["red", "white", "red", "white", "red"],
+        ["white", "red", "red", "red", "white"],
+        ["red", "red", "red", "red", "red"],
+        ["white", "red", "red", "red", "white"],
+        ["red", "white", "red", "white", "white"]
+    ],
+    rings: [
+        ["red", "red", "red", "red", "red"],
+        ["red", "white", "white", "white", "red"],
+        ["red", "white", "red", "white", "red"],
+        ["red", "white", "white", "white", "red"],
+        ["red", "red", "red", "red", "white"]
+    ],
+    circle: [
+        ["red", "white", "red", "white", "red"],
+        ["white", "red", "red", "red", "white"],
+        ["red", "red", "white", "red", "red"],
+        ["white", "red", "red", "red", "white"],
+        ["red", "white", "red", "white", "white"]
+    ],
+    square: [
+        ["red", "red", "red", "red", "red"],
+        ["red", "white", "white", "white", "red"],
+        ["red", "white", "white", "white", "red"],
+        ["red", "white", "white", "white", "red"],
+        ["red", "red", "red", "red", "white"]
+    ],
+    triangle: [
+        ["red", "white", "red", "white", "red"],
+        ["white", "white", "red", "white", "white"],
+        ["white", "red", "red", "red", "white"],
+        ["red", "red", "red", "red", "red"],
+        ["red", "white", "white", "white", "white"]
+    ],
+    hexagon: [
+        ["red", "red", "red", "white", "red"],
+        ["red", "white", "white", "red", "red"],
+        ["red", "white", "white", "red", "red"],
+        ["red", "white", "white", "red", "red"],
+        ["red", "red", "red", "white", "white"]
+    ],
+    plus: [
+        ["red", "white", "red", "white", "red"],
+        ["white", "white", "red", "white", "white"],
+        ["red", "red", "red", "red", "red"],
+        ["white", "white", "red", "white", "white"],
+        ["red", "white", "red", "white", "white"]
+    ],
+    flower: [
+        ["red", "white", "red", "white", "red"],
+        ["white", "red", "red", "red", "white"],
+        ["red", "red", "white", "red", "red"],
+        ["white", "red", "red", "red", "white"],
+        ["white", "white", "red", "white", "white"]
+    ],
+    garden: [
+        ["red", "white", "red", "white", "red"],
+        ["white", "white", "red", "white", "white"],
+        ["red", "red", "white", "red", "red"],
+        ["white", "white", "red", "white", "white"],
+        ["red", "white", "red", "white", "white"]
+    ],
+    petals: [
+        ["red", "red", "white", "red", "red"],
+        ["red", "white", "red", "white", "red"],
+        ["white", "red", "white", "red", "white"],
+        ["red", "white", "red", "white", "red"],
+        ["red", "red", "white", "red", "white"]
+    ],
+    cat: [
+        ["red", "white", "white", "white", "red"],
+        ["white", "red", "white", "red", "white"],
+        ["white", "white", "red", "white", "white"],
+        ["white", "red", "red", "red", "white"],
+        ["red", "white", "white", "white", "white"]
+    ],
+    paw: [
+        ["red", "red", "white", "red", "white"],
+        ["red", "white", "white", "white", "red"],
+        ["white", "white", "red", "white", "white"],
+        ["white", "red", "red", "red", "white"],
+        ["white", "red", "red", "red", "white"]
+    ],
+    butterfly: [
+        ["red", "white", "white", "white", "red"],
+        ["red", "red", "white", "red", "red"],
+        ["white", "white", "red", "white", "white"],
+        ["red", "red", "white", "red", "red"],
+        ["red", "white", "white", "white", "white"]
+    ],
+    fish: [
+        ["red", "white", "red", "red", "white"],
+        ["white", "red", "red", "red", "red"],
+        ["red", "red", "white", "red", "red"],
+        ["white", "red", "red", "red", "red"],
+        ["red", "white", "red", "red", "white"]
+    ],
+    wave: [
+        ["red", "white", "white", "red", "red"],
+        ["white", "red", "white", "white", "red"],
+        ["red", "white", "red", "white", "white"],
+        ["white", "red", "white", "red", "white"],
+        ["red", "white", "red", "white", "white"]
+    ],
+    turtle: [
+        ["red", "white", "red", "white", "red"],
+        ["white", "red", "red", "red", "white"],
+        ["red", "red", "white", "red", "red"],
+        ["white", "red", "red", "red", "white"],
+        ["red", "white", "red", "white", "white"]
+    ],
+    star: [
+        ["red", "white", "red", "white", "red"],
+        ["white", "red", "red", "red", "white"],
+        ["red", "red", "red", "red", "red"],
+        ["white", "red", "red", "red", "white"],
+        ["red", "white", "white", "white", "white"]
+    ],
+    orbit: [
+        ["red", "red", "white", "red", "red"],
+        ["red", "white", "white", "white", "red"],
+        ["white", "white", "red", "white", "white"],
+        ["red", "white", "white", "white", "red"],
+        ["red", "red", "white", "red", "white"]
+    ],
+    rocket: [
+        ["red", "white", "red", "white", "red"],
+        ["white", "red", "red", "red", "white"],
+        ["white", "white", "red", "white", "white"],
+        ["white", "red", "red", "red", "white"],
+        ["red", "white", "red", "white", "white"]
+    ],
+    tetrisMix: [
+        ["red", "red", "white", "white", "white"],
+        ["red", "red", "white", "red", "white"],
+        ["white", "white", "white", "red", "red"],
+        ["red", "white", "red", "red", "white"],
+        ["red", "white", "white", "white", "white"]
+    ],
+    tetrisIRed: [
+        ["white", "white", "white", "white", "white"],
+        ["white", "white", "white", "white", "white"],
+        ["white", "red", "red", "red", "red"],
+        ["white", "white", "white", "white", "white"],
+        ["white", "white", "white", "white", "white"]
+    ],
+    tetrisIWhite: [
+        ["red", "red", "red", "red", "red"],
+        ["red", "red", "red", "red", "red"],
+        ["red", "white", "white", "white", "white"],
+        ["red", "red", "red", "red", "red"],
+        ["red", "red", "red", "red", "red"]
+    ],
+    tetrisTRed: [
+        ["white", "white", "white", "white", "white"],
+        ["white", "red", "red", "red", "white"],
+        ["white", "white", "red", "white", "white"],
+        ["white", "white", "white", "white", "white"],
+        ["white", "white", "white", "white", "white"]
+    ],
+    tetrisTWhite: [
+        ["red", "red", "red", "red", "red"],
+        ["red", "white", "white", "white", "red"],
+        ["red", "red", "white", "red", "red"],
+        ["red", "red", "red", "red", "red"],
+        ["red", "red", "red", "red", "red"]
+    ],
+    tetrisLRed: [
+        ["white", "white", "white", "white", "white"],
+        ["white", "red", "white", "white", "white"],
+        ["white", "red", "white", "white", "white"],
+        ["white", "red", "red", "red", "white"],
+        ["white", "white", "white", "white", "white"]
+    ],
+    tetrisLWhite: [
+        ["red", "red", "red", "red", "red"],
+        ["red", "white", "red", "red", "red"],
+        ["red", "white", "red", "red", "red"],
+        ["red", "white", "white", "white", "red"],
+        ["red", "red", "red", "red", "red"]
+    ],
+    tetrisSRed: [
+        ["white", "white", "white", "white", "white"],
+        ["white", "white", "red", "red", "white"],
+        ["white", "red", "red", "white", "white"],
+        ["white", "white", "white", "white", "white"],
+        ["white", "white", "white", "white", "white"]
+    ],
+    tetrisSWhite: [
+        ["red", "red", "red", "red", "red"],
+        ["red", "red", "white", "white", "red"],
+        ["red", "white", "white", "red", "red"],
+        ["red", "red", "red", "red", "red"],
+        ["red", "red", "red", "red", "red"]
+    ],
+    tetrisORed: [
+        ["white", "white", "white", "white", "white"],
+        ["white", "red", "red", "white", "white"],
+        ["white", "red", "red", "white", "white"],
+        ["white", "white", "white", "white", "white"],
+        ["white", "white", "white", "white", "white"]
+    ],
+    tetrisOWhite: [
+        ["red", "red", "red", "red", "red"],
+        ["red", "white", "white", "red", "red"],
+        ["red", "white", "white", "red", "red"],
+        ["red", "red", "red", "red", "red"],
+        ["red", "red", "red", "red", "red"]
+    ],
+    tetrisI: [
+        ["red", "white", "white", "white", "red"],
+        ["white", "white", "white", "white", "white"],
+        ["red", "red", "red", "red", "red"],
+        ["white", "white", "white", "white", "white"],
+        ["red", "white", "white", "white", "white"]
+    ],
+    tetrisT: [
+        ["red", "white", "red", "white", "red"],
+        ["white", "red", "red", "red", "white"],
+        ["white", "white", "red", "white", "white"],
+        ["white", "white", "red", "white", "white"],
+        ["red", "white", "red", "white", "white"]
+    ],
+    tetrisL: [
+        ["red", "red", "white", "white", "red"],
+        ["red", "white", "white", "white", "white"],
+        ["red", "white", "white", "white", "white"],
+        ["red", "red", "red", "white", "white"],
+        ["red", "white", "white", "white", "white"]
+    ],
+    tetrisS: [
+        ["red", "white", "white", "white", "red"],
+        ["white", "white", "red", "red", "white"],
+        ["white", "red", "red", "white", "white"],
+        ["white", "white", "red", "red", "white"],
+        ["red", "white", "white", "white", "white"]
+    ],
+    tetrisO: [
+        ["red", "white", "white", "white", "red"],
+        ["white", "red", "red", "white", "white"],
+        ["white", "red", "red", "white", "white"],
+        ["white", "white", "white", "white", "white"],
+        ["red", "white", "white", "white", "white"]
+    ],
+    bunny: [
+        ["red", "red", "white", "red", "red"],
+        ["red", "white", "white", "white", "red"],
+        ["white", "red", "white", "red", "white"],
+        ["white", "white", "red", "white", "white"],
+        ["red", "white", "white", "white", "white"]
+    ],
+    owl: [
+        ["red", "red", "white", "red", "red"],
+        ["red", "white", "red", "white", "red"],
+        ["white", "red", "red", "red", "white"],
+        ["white", "white", "red", "white", "white"],
+        ["red", "white", "red", "white", "white"]
+    ],
+    bear: [
+        ["red", "white", "red", "white", "red"],
+        ["red", "red", "red", "red", "red"],
+        ["red", "white", "red", "white", "red"],
+        ["red", "red", "white", "red", "red"],
+        ["white", "red", "red", "red", "white"]
+    ],
+    fox: [
+        ["red", "white", "white", "white", "red"],
+        ["red", "red", "white", "red", "red"],
+        ["white", "red", "red", "red", "white"],
+        ["white", "white", "red", "white", "white"],
+        ["red", "white", "red", "white", "white"]
+    ],
+    bee: [
+        ["red", "white", "red", "white", "red"],
+        ["white", "red", "red", "red", "white"],
+        ["red", "red", "white", "red", "red"],
+        ["white", "red", "red", "red", "white"],
+        ["red", "white", "red", "white", "white"]
+    ],
+    trex: [
+        ["red", "red", "red", "white", "red"],
+        ["red", "white", "red", "red", "white"],
+        ["red", "red", "red", "white", "white"],
+        ["white", "red", "white", "red", "white"],
+        ["red", "white", "red", "white", "white"]
+    ],
+    triceratops: [
+        ["red", "white", "red", "white", "red"],
+        ["white", "red", "red", "red", "white"],
+        ["red", "red", "red", "red", "red"],
+        ["white", "red", "white", "red", "white"],
+        ["red", "white", "red", "white", "white"]
+    ],
+    dinoFootprint: [
+        ["red", "white", "red", "white", "red"],
+        ["white", "white", "white", "white", "white"],
+        ["white", "red", "red", "red", "white"],
+        ["white", "red", "red", "red", "white"],
+        ["red", "white", "red", "white", "white"]
+    ],
+    dinoEgg: [
+        ["red", "white", "red", "white", "red"],
+        ["white", "red", "red", "red", "white"],
+        ["red", "red", "red", "red", "red"],
+        ["white", "red", "red", "red", "white"],
+        ["white", "white", "red", "white", "white"]
+    ],
+    car: [
+        ["red", "white", "white", "white", "red"],
+        ["white", "red", "red", "red", "white"],
+        ["red", "red", "red", "red", "red"],
+        ["white", "red", "white", "red", "white"],
+        ["red", "white", "white", "white", "white"]
+    ],
+    truck: [
+        ["red", "red", "red", "white", "red"],
+        ["red", "white", "red", "red", "red"],
+        ["red", "red", "red", "red", "red"],
+        ["white", "red", "white", "red", "white"],
+        ["red", "white", "white", "white", "white"]
+    ],
+    airplane: [
+        ["red", "white", "red", "white", "red"],
+        ["white", "white", "red", "white", "white"],
+        ["red", "red", "red", "red", "red"],
+        ["white", "white", "red", "white", "white"],
+        ["red", "white", "red", "white", "white"]
+    ],
+    vehicleRocket: [
+        ["red", "white", "red", "white", "red"],
+        ["white", "red", "red", "red", "white"],
+        ["white", "white", "red", "white", "white"],
+        ["white", "red", "red", "red", "white"],
+        ["red", "white", "red", "white", "white"]
+    ],
+    soccer: [
+        ["red", "white", "red", "white", "red"],
+        ["white", "red", "white", "red", "white"],
+        ["red", "white", "red", "white", "red"],
+        ["white", "red", "white", "red", "white"],
+        ["red", "white", "red", "white", "white"]
+    ],
+    basketball: [
+        ["red", "red", "white", "red", "red"],
+        ["red", "white", "red", "white", "red"],
+        ["white", "red", "red", "red", "white"],
+        ["red", "white", "red", "white", "red"],
+        ["red", "red", "white", "red", "white"]
+    ],
+    baseball: [
+        ["red", "white", "white", "white", "red"],
+        ["white", "red", "white", "red", "white"],
+        ["white", "white", "red", "white", "white"],
+        ["white", "red", "white", "red", "white"],
+        ["red", "white", "white", "white", "white"]
+    ],
+    football: [
+        ["red", "white", "red", "white", "red"],
+        ["white", "red", "red", "red", "white"],
+        ["red", "red", "white", "red", "red"],
+        ["white", "red", "red", "red", "white"],
+        ["red", "white", "red", "white", "white"]
+    ],
+    christmasTree: [
+        ["red", "white", "red", "white", "red"],
+        ["white", "white", "red", "white", "white"],
+        ["white", "red", "red", "red", "white"],
+        ["red", "red", "red", "red", "red"],
+        ["white", "white", "red", "white", "white"]
+    ],
+    snowflake: [
+        ["red", "white", "red", "white", "red"],
+        ["white", "red", "red", "red", "white"],
+        ["red", "red", "red", "red", "red"],
+        ["white", "red", "red", "red", "white"],
+        ["red", "white", "red", "white", "white"]
+    ],
+    pumpkin: [
+        ["red", "white", "red", "white", "red"],
+        ["white", "red", "red", "red", "white"],
+        ["red", "red", "red", "red", "red"],
+        ["red", "red", "red", "red", "red"],
+        ["white", "red", "red", "red", "white"]
+    ],
+    easterEgg: [
+        ["red", "white", "red", "white", "red"],
+        ["white", "red", "red", "red", "white"],
+        ["red", "red", "red", "red", "red"],
+        ["white", "red", "red", "red", "white"],
+        ["white", "white", "red", "white", "white"]
+    ],
+    letterA: [
+        ["red", "white", "red", "white", "red"],
+        ["red", "white", "white", "white", "red"],
+        ["red", "red", "red", "red", "red"],
+        ["red", "white", "white", "white", "red"],
+        ["red", "white", "white", "white", "white"]
+    ],
+    letterB: [
+        ["red", "red", "red", "red", "red"],
+        ["red", "white", "white", "white", "red"],
+        ["red", "red", "red", "red", "white"],
+        ["red", "white", "white", "white", "red"],
+        ["red", "red", "red", "red", "white"]
+    ],
+    letterC: [
+        ["red", "red", "red", "red", "red"],
+        ["red", "white", "white", "white", "white"],
+        ["red", "white", "white", "white", "white"],
+        ["red", "white", "white", "white", "white"],
+        ["red", "red", "red", "red", "white"]
+    ],
+    letterS: [
+        ["red", "red", "red", "red", "red"],
+        ["red", "white", "white", "white", "white"],
+        ["red", "red", "red", "red", "red"],
+        ["white", "white", "white", "white", "red"],
+        ["red", "red", "red", "red", "white"]
+    ],
+    number1: [
+        ["red", "white", "red", "white", "red"],
+        ["white", "red", "red", "white", "white"],
+        ["white", "white", "red", "white", "white"],
+        ["white", "white", "red", "white", "white"],
+        ["red", "red", "red", "red", "white"]
+    ],
+    number2: [
+        ["red", "red", "red", "red", "red"],
+        ["white", "white", "white", "white", "red"],
+        ["red", "red", "red", "red", "red"],
+        ["red", "white", "white", "white", "white"],
+        ["red", "red", "red", "red", "white"]
+    ],
+    number3: [
+        ["red", "red", "red", "red", "red"],
+        ["white", "white", "white", "white", "red"],
+        ["white", "red", "red", "red", "red"],
+        ["white", "white", "white", "white", "red"],
+        ["red", "red", "red", "red", "white"]
+    ],
+    number5: [
+        ["red", "red", "red", "red", "red"],
+        ["red", "white", "white", "white", "white"],
+        ["red", "red", "red", "red", "red"],
+        ["white", "white", "white", "white", "red"],
+        ["red", "red", "red", "red", "white"]
+    ],
+    letterA: [
+        ["white", "red", "red", "red", "white"],
+        ["red", "white", "white", "white", "red"],
+        ["red", "red", "red", "red", "red"],
+        ["red", "white", "white", "white", "red"],
+        ["red", "white", "white", "white", "red"]
+    ],
+    letterB: [
+        ["red", "red", "red", "red", "white"],
+        ["red", "white", "white", "white", "red"],
+        ["red", "red", "red", "red", "white"],
+        ["red", "white", "white", "white", "red"],
+        ["red", "red", "red", "red", "white"]
+    ],
+    letterC: [
+        ["white", "red", "red", "red", "red"],
+        ["red", "white", "white", "white", "white"],
+        ["red", "white", "white", "white", "white"],
+        ["red", "white", "white", "white", "white"],
+        ["white", "red", "red", "red", "red"]
+    ],
+    letterD: [
+        ["red", "red", "red", "red", "white"],
+        ["red", "white", "white", "white", "red"],
+        ["red", "white", "white", "white", "red"],
+        ["red", "white", "white", "white", "red"],
+        ["red", "red", "red", "red", "white"]
+    ],
+    letterE: [
+        ["red", "red", "red", "red", "red"],
+        ["red", "white", "white", "white", "white"],
+        ["red", "red", "red", "red", "white"],
+        ["red", "white", "white", "white", "white"],
+        ["red", "red", "red", "red", "red"]
+    ],
+    letterF: [
+        ["red", "red", "red", "red", "red"],
+        ["red", "white", "white", "white", "white"],
+        ["red", "red", "red", "red", "white"],
+        ["red", "white", "white", "white", "white"],
+        ["red", "white", "white", "white", "white"]
+    ],
+    letterG: [
+        ["white", "red", "red", "red", "red"],
+        ["red", "white", "white", "white", "white"],
+        ["red", "white", "red", "red", "red"],
+        ["red", "white", "white", "white", "red"],
+        ["white", "red", "red", "red", "red"]
+    ],
+    letterH: [
+        ["red", "white", "white", "white", "red"],
+        ["red", "white", "white", "white", "red"],
+        ["red", "red", "red", "red", "red"],
+        ["red", "white", "white", "white", "red"],
+        ["red", "white", "white", "white", "red"]
+    ],
+    letterI: [
+        ["red", "red", "red", "red", "red"],
+        ["white", "white", "red", "white", "white"],
+        ["white", "white", "red", "white", "white"],
+        ["white", "white", "red", "white", "white"],
+        ["red", "red", "red", "red", "red"]
+    ],
+    letterJ: [
+        ["white", "white", "red", "red", "red"],
+        ["white", "white", "white", "red", "white"],
+        ["white", "white", "white", "red", "white"],
+        ["red", "white", "white", "red", "white"],
+        ["white", "red", "red", "white", "white"]
+    ],
+    letterK: [
+        ["red", "white", "white", "white", "red"],
+        ["red", "white", "white", "red", "white"],
+        ["red", "red", "red", "white", "white"],
+        ["red", "white", "white", "red", "white"],
+        ["red", "white", "white", "white", "red"]
+    ],
+    letterL: [
+        ["red", "white", "white", "white", "white"],
+        ["red", "white", "white", "white", "white"],
+        ["red", "white", "white", "white", "white"],
+        ["red", "white", "white", "white", "white"],
+        ["red", "red", "red", "red", "red"]
+    ],
+    letterM: [
+        ["red", "white", "white", "white", "red"],
+        ["red", "red", "white", "red", "red"],
+        ["red", "white", "red", "white", "red"],
+        ["red", "white", "white", "white", "red"],
+        ["red", "white", "white", "white", "red"]
+    ],
+    letterN: [
+        ["red", "white", "white", "white", "red"],
+        ["red", "red", "white", "white", "red"],
+        ["red", "white", "red", "white", "red"],
+        ["red", "white", "white", "red", "red"],
+        ["red", "white", "white", "white", "red"]
+    ],
+    letterO: [
+        ["white", "red", "red", "red", "white"],
+        ["red", "white", "white", "white", "red"],
+        ["red", "white", "white", "white", "red"],
+        ["red", "white", "white", "white", "red"],
+        ["white", "red", "red", "red", "white"]
+    ],
+    letterP: [
+        ["red", "red", "red", "red", "white"],
+        ["red", "white", "white", "white", "red"],
+        ["red", "red", "red", "red", "white"],
+        ["red", "white", "white", "white", "white"],
+        ["red", "white", "white", "white", "white"]
+    ],
+    letterQ: [
+        ["white", "red", "red", "red", "white"],
+        ["red", "white", "white", "white", "red"],
+        ["red", "white", "white", "white", "red"],
+        ["red", "white", "white", "red", "red"],
+        ["white", "red", "red", "red", "red"]
+    ],
+    letterR: [
+        ["red", "red", "red", "red", "white"],
+        ["red", "white", "white", "white", "red"],
+        ["red", "red", "red", "red", "white"],
+        ["red", "white", "white", "red", "white"],
+        ["red", "white", "white", "white", "red"]
+    ],
+    letterS: [
+        ["white", "red", "red", "red", "red"],
+        ["red", "white", "white", "white", "white"],
+        ["white", "red", "red", "red", "white"],
+        ["white", "white", "white", "white", "red"],
+        ["red", "red", "red", "red", "white"]
+    ],
+    letterT: [
+        ["red", "red", "red", "red", "red"],
+        ["white", "white", "red", "white", "white"],
+        ["white", "white", "red", "white", "white"],
+        ["white", "white", "red", "white", "white"],
+        ["white", "white", "red", "white", "white"]
+    ],
+    letterU: [
+        ["red", "white", "white", "white", "red"],
+        ["red", "white", "white", "white", "red"],
+        ["red", "white", "white", "white", "red"],
+        ["red", "white", "white", "white", "red"],
+        ["white", "red", "red", "red", "white"]
+    ],
+    letterV: [
+        ["red", "white", "white", "white", "red"],
+        ["red", "white", "white", "white", "red"],
+        ["red", "white", "white", "white", "red"],
+        ["white", "red", "white", "red", "white"],
+        ["white", "white", "red", "white", "white"]
+    ],
+    letterW: [
+        ["red", "white", "white", "white", "red"],
+        ["red", "white", "white", "white", "red"],
+        ["red", "white", "red", "white", "red"],
+        ["red", "red", "white", "red", "red"],
+        ["red", "white", "white", "white", "red"]
+    ],
+    letterX: [
+        ["red", "white", "white", "white", "red"],
+        ["white", "red", "white", "red", "white"],
+        ["white", "white", "red", "white", "white"],
+        ["white", "red", "white", "red", "white"],
+        ["red", "white", "white", "white", "red"]
+    ],
+    letterY: [
+        ["red", "white", "white", "white", "red"],
+        ["white", "red", "white", "red", "white"],
+        ["white", "white", "red", "white", "white"],
+        ["white", "white", "red", "white", "white"],
+        ["white", "white", "red", "white", "white"]
+    ],
+    letterZ: [
+        ["red", "red", "red", "red", "red"],
+        ["white", "white", "white", "red", "white"],
+        ["white", "white", "red", "white", "white"],
+        ["white", "red", "white", "white", "white"],
+        ["red", "red", "red", "red", "red"]
+    ],
+    number0: [
+        ["white", "red", "red", "red", "white"],
+        ["red", "white", "white", "white", "red"],
+        ["red", "white", "white", "white", "red"],
+        ["red", "white", "white", "white", "red"],
+        ["white", "red", "red", "red", "white"]
+    ],
+    number1: [
+        ["white", "white", "red", "white", "white"],
+        ["white", "red", "red", "white", "white"],
+        ["white", "white", "red", "white", "white"],
+        ["white", "white", "red", "white", "white"],
+        ["white", "red", "red", "red", "white"]
+    ],
+    number2: [
+        ["white", "red", "red", "red", "white"],
+        ["red", "white", "white", "white", "red"],
+        ["white", "white", "white", "red", "white"],
+        ["white", "white", "red", "white", "white"],
+        ["red", "red", "red", "red", "red"]
+    ],
+    number3: [
+        ["red", "red", "red", "red", "white"],
+        ["white", "white", "white", "white", "red"],
+        ["white", "red", "red", "red", "white"],
+        ["white", "white", "white", "white", "red"],
+        ["red", "red", "red", "red", "white"]
+    ],
+    number4: [
+        ["red", "white", "white", "white", "red"],
+        ["red", "white", "white", "white", "red"],
+        ["red", "red", "red", "red", "red"],
+        ["white", "white", "white", "white", "red"],
+        ["white", "white", "white", "white", "red"]
+    ],
+    number5: [
+        ["red", "red", "red", "red", "red"],
+        ["red", "white", "white", "white", "white"],
+        ["red", "red", "red", "red", "white"],
+        ["white", "white", "white", "white", "red"],
+        ["red", "red", "red", "red", "white"]
+    ],
+    number6: [
+        ["white", "red", "red", "red", "red"],
+        ["red", "white", "white", "white", "white"],
+        ["red", "red", "red", "red", "white"],
+        ["red", "white", "white", "white", "red"],
+        ["white", "red", "red", "red", "white"]
+    ],
+    number7: [
+        ["red", "red", "red", "red", "red"],
+        ["white", "white", "white", "red", "white"],
+        ["white", "white", "red", "white", "white"],
+        ["white", "red", "white", "white", "white"],
+        ["white", "red", "white", "white", "white"]
+    ],
+    number8: [
+        ["white", "red", "red", "red", "white"],
+        ["red", "white", "white", "white", "red"],
+        ["white", "red", "red", "red", "white"],
+        ["red", "white", "white", "white", "red"],
+        ["white", "red", "red", "red", "white"]
+    ],
+    number9: [
+        ["white", "red", "red", "red", "white"],
+        ["red", "white", "white", "white", "red"],
+        ["white", "red", "red", "red", "red"],
+        ["white", "white", "white", "white", "red"],
+        ["red", "red", "red", "red", "white"]
+    ]
+};
 
 let board = [];
 let selected = null;
@@ -30,6 +947,29 @@ function randomExitSides() {
     whiteExitSide = Math.random() < 0.5 ? "bottom" : "right";
 }
 
+function updateTheme() {
+    const theme = getCurrentThemeName();
+    document.body.className = `theme-${theme}`;
+}
+
+function populatePatternOptions() {
+    if (!patternSelect) return;
+
+    const theme = getCurrentThemeName();
+    const patterns = THEME_PATTERNS[theme] || THEME_PATTERNS.classic;
+
+    patternSelect.innerHTML = "";
+
+    patterns.forEach(function (patternName) {
+        const option = document.createElement("option");
+        option.value = patternName;
+        option.textContent = PATTERN_LABELS[patternName] || patternName;
+        patternSelect.appendChild(option);
+    });
+
+    patternSelect.value = patterns[0];
+}
+
 function updateGateClasses() {
     boardElement.classList.remove("red-gate-top", "red-gate-left", "white-gate-bottom", "white-gate-right");
     boardElement.classList.add(`red-gate-${redExitSide}`);
@@ -39,12 +979,19 @@ function updateGateClasses() {
 function createBoard() {
     board = [];
     randomExitSides();
+    updateTheme();
     updateGateClasses();
 
-    for (let row = 0; row < SIZE; row++) {
-        board[row] = [];
-        for (let col = 0; col < SIZE; col++) {
-            board[row][col] = randomColor();
+    const selectedPattern = patternSelect ? patternSelect.value : "checker";
+
+    if (selectedPattern !== "random" && BOARD_PATTERNS[selectedPattern]) {
+        board = clonePattern(BOARD_PATTERNS[selectedPattern]);
+    } else {
+        for (let row = 0; row < SIZE; row++) {
+            board[row] = [];
+            for (let col = 0; col < SIZE; col++) {
+                board[row][col] = randomColor();
+            }
         }
     }
 
@@ -63,9 +1010,16 @@ function createBoard() {
     render();
 }
 
+function clonePattern(pattern) {
+    return pattern.map(function (row) {
+        return row.slice();
+    });
+}
+
 function render() {
     boardElement.innerHTML = "";
     let tilesLeft = 0;
+    const tileLabels = getCurrentTileLabels();
 
     for (let row = 0; row < SIZE; row++) {
         for (let col = 0; col < SIZE; col++) {
@@ -85,6 +1039,11 @@ function render() {
                 tile.className = `tile ${color}`;
                 tile.dataset.row = String(row);
                 tile.dataset.col = String(col);
+
+                const label = document.createElement("span");
+                label.className = "tile-label";
+                label.textContent = color === "red" ? tileLabels.redLabel : tileLabels.whiteLabel;
+                tile.appendChild(label);
 
                 if (selected && selected.row === row && selected.col === col) {
                     tile.classList.add("selected");
@@ -108,6 +1067,23 @@ function render() {
 
     updateStats(tilesLeft);
     if (tilesLeft === 0) setMessage(`You cleared the board in ${moves} moves!`);
+}
+
+function getCurrentThemeName() {
+    return themeSelect ? themeSelect.value : "classic";
+}
+
+function getCurrentPatternName() {
+    return patternSelect ? patternSelect.value : "";
+}
+
+function getCurrentTileLabels() {
+    const patternName = getCurrentPatternName();
+    if (PATTERN_TILE_LABELS[patternName]) {
+        return PATTERN_TILE_LABELS[patternName];
+    }
+
+    return THEMES[getCurrentThemeName()] || THEMES.classic;
 }
 
 function handlePointerDown(event) {
@@ -254,32 +1230,20 @@ function getDirectGateLineExit(dx, dy, startRow, startCol) {
     if (color === "red") {
         corner = { row: 0, col: 0 };
         exit = getManualExitTarget(corner.row, corner.col, color);
-        requiredDirection = redExitSide === "top"
-            ? { rowStep: -1, colStep: 0, axis: "y" }
-            : { rowStep: 0, colStep: -1, axis: "x" };
+        requiredDirection = redExitSide === "top" ? { rowStep: -1, colStep: 0, axis: "y" } : { rowStep: 0, colStep: -1, axis: "x" };
     }
 
     if (color === "white" || color === "black") {
         corner = { row: SIZE - 1, col: SIZE - 1 };
         exit = getManualExitTarget(corner.row, corner.col, color);
-        requiredDirection = whiteExitSide === "bottom"
-            ? { rowStep: 1, colStep: 0, axis: "y" }
-            : { rowStep: 0, colStep: 1, axis: "x" };
+        requiredDirection = whiteExitSide === "bottom" ? { rowStep: 1, colStep: 0, axis: "y" } : { rowStep: 0, colStep: 1, axis: "x" };
     }
 
     if (!corner || !exit || !requiredDirection) return null;
 
-    if (direction.rowStep !== requiredDirection.rowStep || direction.colStep !== requiredDirection.colStep) {
-        return null;
-    }
-
-    if (!isAlignedWithGateLine(startRow, startCol, corner.row, corner.col, requiredDirection)) {
-        return null;
-    }
-
-    if (!isPathToCornerClearForExit(startRow, startCol, corner.row, corner.col)) {
-        return null;
-    }
+    if (direction.rowStep !== requiredDirection.rowStep || direction.colStep !== requiredDirection.colStep) return null;
+    if (!isAlignedWithGateLine(startRow, startCol, corner.row, corner.col, requiredDirection)) return null;
+    if (!isPathToCornerClearForExit(startRow, startCol, corner.row, corner.col)) return null;
 
     const stepsToCorner = Math.abs(startRow - corner.row) + Math.abs(startCol - corner.col);
 
@@ -293,10 +1257,7 @@ function getDirectGateLineExit(dx, dy, startRow, startCol) {
 }
 
 function isAlignedWithGateLine(startRow, startCol, cornerRow, cornerCol, direction) {
-    if (direction.axis === "y") {
-        return startCol === cornerCol;
-    }
-
+    if (direction.axis === "y") return startCol === cornerCol;
     return startRow === cornerRow;
 }
 
@@ -506,5 +1467,15 @@ function setMessage(text) {
 }
 
 if (newGameBtn) newGameBtn.addEventListener("click", createBoard);
+if (patternSelect) patternSelect.addEventListener("change", createBoard);
+if (themeSelect) {
+    themeSelect.addEventListener("change", function () {
+        updateTheme();
+        populatePatternOptions();
+        createBoard();
+    });
+}
 
+updateTheme();
+populatePatternOptions();
 createBoard();
