@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Corner Shift</title>
+    <link rel="stylesheet" href="styles.css?v=gate-line-exit-2">
+</head>
+<body>
+    <main class="game-wrap">
+        <h1>Corner Shift</h1>
+
+        <p class="info">
+            Slide red tiles to the red gate and white tiles to the white gate. If the path is clear, a correct tile can slide through its corner and exit in one move.
+        </p>
+
+        <section class="stats">
+            <div class="pill">Moves: <span id="moves">0</span></div>
+            <div class="pill">Tiles Left: <span id="left">25</span></div>
+        </section>
+
+        <section class="board-area">
+            <div id="board" class="board"></div>
+        </section>
+
+        <div id="message" class="message"></div>
+
+        <button id="newGameBtn">New Game</button>
+
+        <p class="rules">
+            Drag, swipe, or tap a tile. Tiles can slide through empty spaces. A correct tile can exit through its gate if it is already on the gate line and every space between it and the corner is empty.
+        </p>
+    </main>
+
+    <script src="script.js?v=gate-line-exit-2"></script>
+</body>
+</html>
